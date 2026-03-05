@@ -105,7 +105,6 @@ const SLACK_CLIENT_SECRET = 'your-client-secret';
 ## 既知の制限
 
 - **SPA内遷移不可**: SlackのCSP制約により「Slackで開く」はページリロードを伴います
-- **拡張ID**: 未パッケージの拡張はインストールごとにIDが変わる可能性があります。配布時はChrome Web Storeで固定推奨
 - **DMは非対応**: ダイレクトメッセージのスレッド表示には対応していません
 
 ## ライセンス
