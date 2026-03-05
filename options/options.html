@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Slack Thread Viewer - 設定</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1d21;
+      color: #d1d2d3;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 560px;
+      width: 100%;
+      background: #222529;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #9ea0a3;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #d1d2d3;
+      margin-bottom: 6px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      background: #1a1d21;
+      border: 1px solid #393b3f;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus { border-color: #1264a3; }
+    input[type="text"]::placeholder { color: #616366; }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: #007a5a;
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) { background: #148567; }
+    .btn-secondary {
+      background: #393b3f;
+      color: #d1d2d3;
+    }
+    .btn-secondary:hover:not(:disabled) { background: #4a4c50; }
+    .btn-slack {
+      background: #4A154B;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 15px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-slack:hover:not(:disabled) { background: #611f64; }
+    .btn-danger {
+      background: #e01e5a;
+      color: #fff;
+    }
+    .btn-danger:hover:not(:disabled) { background: #c41a50; }
+    .status {
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+    }
+    .status.success {
+      display: block;
+      background: #0d3e2e;
+      color: #2eb67d;
+      border: 1px solid #2eb67d33;
+    }
+    .status.error {
+      display: block;
+      background: #3e1517;
+      color: #e01e5a;
+      border: 1px solid #e01e5a33;
+    }
+
+    /* Logged-in state */
+    .logged-in-card {
+      padding: 20px;
+      background: #1a1d21;
+      border-radius: 8px;
+      display: none;
+    }
+    .logged-in-card .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .logged-in-card .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #393b3f;
+    }
+    .logged-in-card .user-details .name {
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .logged-in-card .user-details .workspace {
+      color: #9ea0a3;
+      font-size: 13px;
+    }
+    .logged-in-card .logout-btn {
+      width: 100%;
+    }
+
+    /* Divider */
+    .divider {
+      margin: 24px 0;
+      border: none;
+      border-top: 1px solid #393b3f;
+    }
+
+    /* Advanced section */
+    details {
+      margin-top: 24px;
+    }
+    details summary {
+      font-size: 13px;
+      color: #616366;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    details summary:hover { color: #9ea0a3; }
+    details .advanced-content {
+      margin-top: 16px;
+    }
+
+    .help {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #393b3f;
+    }
+    .help h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .help ol {
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #9ea0a3;
+    }
+    .help a { color: #1d9bd1; text-decoration: none; }
+    .help a:hover { text-decoration: underline; }
+    .help code {
+      background: #1a1d21;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #e8912d;
+    }
+
+    .redirect-url {
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: #1a1d21;
+      border-radius: 6px;
+      font-size: 12px;
+      word-break: break-all;
+    }
+    .redirect-url .label { color: #9ea0a3; display: block; margin-bottom: 4px; }
+    .redirect-url .value { color: #e8912d; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Slack Thread Viewer 設定</h1>
+
+    <!-- ログイン済み表示 -->
+    <div class="logged-in-card" id="loggedInCard">
+      <div class="user-info">
+        <img class="user-avatar" id="userAvatar" src="" alt="">
+        <div class="user-details">
+          <div class="name" id="loggedInName"></div>
+          <div class="workspace" id="loggedInWorkspace"></div>
+        </div>
+      </div>
+      <button class="btn-danger logout-btn" id="logoutBtn">ログアウト</button>
+    </div>
+
+    <!-- 未ログイン: OAuthログイン -->
+    <div id="loginSection">
+      <p class="subtitle">Slackアカウントでログインしてください</p>
+      <button class="btn-slack" id="oauthBtn">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 0C6.12 0 5 1.12 5 2.5S6.12 5 7.5 5H10V2.5C10 1.12 8.88 0 7.5 0Z" fill="#E01E5A"/><path d="M0 7.5C0 6.12 1.12 5 2.5 5S5 6.12 5 7.5V10H2.5C1.12 10 0 8.88 0 7.5Z" fill="#36C5F0"/><path d="M12.5 5C13.88 5 15 6.12 15 7.5S13.88 10 12.5 10H10V7.5C10 6.12 11.12 5 12.5 5Z" fill="#2EB67D"/><path d="M20 12.5C20 11.12 18.88 10 17.5 10S15 11.12 15 12.5V15h2.5C18.88 15 20 13.88 20 12.5Z" fill="#ECB22E"/><path d="M7.5 20C8.88 20 10 18.88 10 17.5S8.88 15 7.5 15H5v2.5C5 18.88 6.12 20 7.5 20Z" fill="#E01E5A"/><path d="M12.5 15C11.12 15 10 16.12 10 17.5v2.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V15h-2.5Z" fill="#2EB67D"/><path d="M17.5 5H15V2.5C15 1.12 16.12 0 17.5 0S20 1.12 20 2.5 18.88 5 17.5 5Z" fill="#ECB22E"/><path d="M0 12.5C0 13.88 1.12 15 2.5 15S5 13.88 5 12.5V10H2.5C1.12 10 0 11.12 0 12.5Z" fill="#36C5F0"/></svg>
+        Slackでログイン
+      </button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <!-- 詳細設定（手動トークン入力） -->
+    <details>
+      <summary>詳細設定（手動でトークンを入力）</summary>
+      <div class="advanced-content">
+        <label for="token">User OAuth Token (xoxp-)</label>
+        <input type="text" id="token" placeholder="xoxp-xxxxxxxxxxxx-xxxxxxxxxxxx-..." />
+        <div class="btn-group">
+          <button class="btn-primary" id="saveBtn">保存</button>
+          <button class="btn-secondary" id="testBtn">接続テスト</button>
+        </div>
+        <div class="status" id="manualStatus"></div>
+      </div>
+    </details>
+
+    <!-- 管理者向け情報 -->
+    <div class="help">
+      <h2>管理者向け: Slack App設定</h2>
+      <ol>
+        <li><a href="https://api.slack.com/apps" target="_blank">Slack API</a> で「Create New App」→「From scratch」</li>
+        <li>アプリ名を入力し、ワークスペースを選択</li>
+        <li>「OAuth &amp; Permissions」→「User Token Scopes」に追加:
+          <br><code>channels:history</code> <code>channels:read</code>
+          <br><code>groups:history</code> <code>groups:read</code>
+          <br><code>users:read</code>
+        </li>
+        <li>「Redirect URLs」に以下を追加:</li>
+      </ol>
+      <div class="redirect-url">
+        <span class="label">Redirect URL（Slack Appに設定）:</span>
+        <span class="value" id="redirectUrl">読み込み中...</span>
+      </div>
+      <ol start="5" style="padding-left:20px;font-size:13px;line-height:1.8;color:#9ea0a3;margin-top:12px;">
+        <li>Client IDとClient Secretを <code>config.js</code> に記入</li>
+        <li>拡張をパッケージングして配布</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="../config.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

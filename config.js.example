@@ -1,0 +1,6 @@
+// Slack App の認証情報
+// https://api.slack.com/apps でアプリ作成後、以下を設定してください
+// このファイルを config.js にコピーして値を入力してください
+
+const SLACK_CLIENT_ID = 'YOUR_CLIENT_ID';
+const SLACK_CLIENT_SECRET = 'YOUR_CLIENT_SECRET';

@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Slack Thread Viewer",
+  "version": "1.0.0",
+  "description": "スレッドを最新返信順に表示するSlack用サイドパネル拡張",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "activeTab",
+    "tabs",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://slack.com/api/*",
+    "https://app.slack.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.slack.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Slack Thread Viewer"
+  }
+}

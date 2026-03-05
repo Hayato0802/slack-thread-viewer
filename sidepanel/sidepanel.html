@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Slack Thread Viewer</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <!-- 未設定画面 -->
+  <div id="setupView" class="view" style="display:none;">
+    <div class="setup-message">
+      <div class="setup-icon">&#128274;</div>
+      <h2>ログインが必要です</h2>
+      <p>Slackアカウントでログインしてください</p>
+      <button id="oauthLoginBtn" class="btn-slack-login">Slackでログイン</button>
+      <div id="setupStatus" class="setup-status"></div>
+      <button id="openOptionsBtn" class="btn-link">手動で設定する</button>
+    </div>
+  </div>
+
+  <!-- Slackタブ未検出 -->
+  <div id="noSlackView" class="view" style="display:none;">
+    <div class="setup-message">
+      <div class="setup-icon">&#128269;</div>
+      <h2>Slackが見つかりません</h2>
+      <p>Slack Webを開いてチャンネルを表示してください</p>
+    </div>
+  </div>
+
+  <!-- メイン画面 -->
+  <div id="mainView" class="view" style="display:none;">
+    <!-- ヘッダー -->
+    <div class="header">
+      <div class="header-top">
+        <h1 class="header-title">Thread Viewer</h1>
+        <button id="settingsBtn" class="icon-btn" title="設定">&#9881;</button>
+      </div>
+
+      <!-- 現在のチャンネル表示 -->
+      <div class="current-channel" id="currentChannel">
+        <span class="channel-icon">#</span>
+        <span class="channel-name" id="channelName">検出中...</span>
+        <button id="refreshBtn" class="icon-btn" title="更新">&#8635;</button>
+      </div>
+
+      <!-- キーワード検索 -->
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="スレッドを検索..." />
+      </div>
+
+      <!-- 手動チャンネル選択（フォールバック） -->
+      <details class="channel-fallback">
+        <summary>チャンネルを手動で選択</summary>
+        <select id="channelSelect">
+          <option value="">チャンネルを選択...</option>
+        </select>
+      </details>
+
+      <div class="auto-refresh">
+        <label>
+          <input type="checkbox" id="autoRefreshToggle" checked>
+          自動更新 (30秒)
+        </label>
+        <span id="lastUpdated" class="last-updated"></span>
+      </div>
+    </div>
+
+    <!-- ローディング -->
+    <div id="loading" class="loading" style="display:none;">
+      <div class="spinner"></div>
+      <span>読み込み中...</span>
+    </div>
+
+    <!-- スレッド一覧 -->
+    <div id="threadList" class="thread-list"></div>
+
+    <!-- もっと読み込む -->
+    <div id="loadMoreWrap" class="load-more-wrap" style="display:none;">
+      <button id="loadMoreBtn" class="btn-secondary">もっと読み込む</button>
+    </div>
+
+    <!-- 空状態 -->
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <p>スレッドがありません</p>
+    </div>
+  </div>
+
+  <!-- スレッド詳細（オーバーレイ） -->
+  <div id="threadDetail" class="thread-detail" style="display:none;">
+    <div class="detail-header">
+      <button id="backBtn" class="icon-btn">&#8592;</button>
+      <h2>スレッド</h2>
+      <button id="openInSlackBtn" class="btn-slack" title="Slackで開く">Slackで開く &#8599;</button>
+    </div>
+    <div id="threadMessages" class="thread-messages"></div>
+  </div>
+
+  <script src="../config.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
