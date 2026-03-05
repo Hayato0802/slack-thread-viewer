@@ -166,16 +166,12 @@ async function loadThreads(append = false) {
       // Manual "load more": single page fetch
       await fetchPage();
     } else {
-      // Initial load: auto-paginate to cover recent replies
+      // Initial load: auto-paginate until no threads with recent replies remain
       const cutoff = Date.now() / 1000 - RECENT_REPLY_DAYS * 86400;
-      let hasMore = true;
 
-      while (hasMore) {
-        const oldestTs = await fetchPage();
-        hasMore = !!nextCursor;
-
-        // Stop if we've gone far enough back that no recent replies would be missed
-        if (!hasMore || oldestTs < cutoff) break;
+      while (true) {
+        const pageHasRecentReply = await fetchPage(cutoff);
+        if (!nextCursor || !pageHasRecentReply) break;
       }
     }
 
@@ -207,8 +203,9 @@ async function loadThreads(append = false) {
   }
 }
 
-// Fetch a single page from conversations.history; returns oldest message ts
-async function fetchPage() {
+// Fetch a single page from conversations.history
+// Returns true if any thread in this page has latest_reply after cutoff
+async function fetchPage(cutoff) {
   const params = { channel: selectedChannelId, limit: 100 };
   if (nextCursor) params.cursor = nextCursor;
 
@@ -216,17 +213,17 @@ async function fetchPage() {
   const messages = data.messages || [];
   nextCursor = data.response_metadata?.next_cursor || '';
 
+  let hasRecentReply = false;
   const newThreads = messages
     .filter(m => !m.thread_ts || m.thread_ts === m.ts)
-    .map(m => ({
-      ...m,
-      sortKey: parseFloat(m.latest_reply || m.ts),
-    }));
+    .map(m => {
+      const replyTs = parseFloat(m.latest_reply || 0);
+      if (cutoff && replyTs > cutoff) hasRecentReply = true;
+      return { ...m, sortKey: parseFloat(m.latest_reply || m.ts) };
+    });
 
   allThreads.push(...newThreads);
-
-  // Return the oldest message timestamp in this page
-  return messages.length > 0 ? parseFloat(messages[messages.length - 1].ts) : 0;
+  return hasRecentReply;
 }
 
 // ===== Search Filter =====
