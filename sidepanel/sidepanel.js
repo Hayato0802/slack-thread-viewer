@@ -12,6 +12,19 @@ let slackTabId = null;
 let nextCursor = ''; // for pagination
 let lastThreadsHash = ''; // for change detection
 
+// ===== Theme =====
+function applyTheme(theme) {
+  document.body.className = theme === 'light' ? 'theme-light' : 'theme-dark';
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) btn.innerHTML = theme === 'light' ? '&#9788;' : '&#9790;';
+}
+
+// Apply saved theme immediately to avoid flash
+(async () => {
+  const { theme } = await chrome.storage.local.get(['theme']);
+  applyTheme(theme || 'dark');
+})();
+
 // ===== DOM Elements =====
 const setupView = document.getElementById('setupView');
 const noSlackView = document.getElementById('noSlackView');
@@ -140,8 +153,6 @@ async function loadThreads(append = false) {
   if (!selectedChannelId) return;
 
   if (!append) {
-    loading.style.display = 'flex';
-    threadList.innerHTML = '';
     emptyState.style.display = 'none';
     loadMoreWrap.style.display = 'none';
     nextCursor = '';
@@ -421,10 +432,31 @@ function stopAutoRefresh() {
   }
 }
 
+// ===== DM Detection =====
+function isDmChannel(channelId) {
+  return channelId?.startsWith('D');
+}
+
+function showDmNotice() {
+  stopAutoRefresh();
+  loading.style.display = 'none';
+  threadList.innerHTML = '';
+  emptyState.style.display = 'none';
+  loadMoreWrap.style.display = 'none';
+  channelNameEl.textContent = 'ダイレクトメッセージ';
+  threadList.innerHTML = '<div class="empty-state" style="display:flex;"><p>DMにはスレッド表示は対応していません。<br>チャンネルを開いてください。</p></div>';
+}
+
 // ===== Channel Switch =====
 async function switchChannel(channelId) {
   if (channelId === selectedChannelId) return;
   selectedChannelId = channelId;
+
+  if (isDmChannel(channelId)) {
+    showDmNotice();
+    return;
+  }
+
   chrome.storage.local.set({ lastChannelId: channelId });
   updateChannelDisplay();
   searchInput.value = '';
@@ -493,6 +525,14 @@ oauthLoginBtn.addEventListener('click', async () => {
 });
 
 // ===== Event Handlers =====
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+themeToggleBtn.addEventListener('click', async () => {
+  const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  await chrome.storage.local.set({ theme: next });
+});
+
 const openOptionsBtn = document.getElementById('openOptionsBtn');
 openOptionsBtn.addEventListener('click', () => chrome.runtime.openOptionsPage());
 settingsBtn.addEventListener('click', () => chrome.runtime.openOptionsPage());
@@ -541,6 +581,16 @@ chrome.runtime.onMessage.addListener((msg) => {
 
 // ===== Initialization =====
 async function init() {
+  // Check if config.js is loaded
+  if (typeof SLACK_CLIENT_ID === 'undefined') {
+    setupView.style.display = 'flex';
+    mainView.style.display = 'none';
+    noSlackView.style.display = 'none';
+    oauthLoginBtn.style.display = 'none';
+    setupStatus.textContent = 'config.js が見つかりません。config.js.example をコピーして config.js を作成し、Client ID/Secret を設定してください。';
+    return;
+  }
+
   // Load user cache
   const cached = await chrome.storage.local.get(['userCache']);
   if (cached.userCache) userCache = cached.userCache;
@@ -553,6 +603,7 @@ async function init() {
     setupView.style.display = 'flex';
     mainView.style.display = 'none';
     noSlackView.style.display = 'none';
+    oauthLoginBtn.style.display = '';
     return;
   }
 
@@ -570,14 +621,18 @@ async function init() {
       slackTabId = slackTabId; // already set in detectSlackTab
       teamId = detected.teamId;
       selectedChannelId = detected.channelId;
-      updateChannelDisplay();
 
       setupView.style.display = 'none';
       noSlackView.style.display = 'none';
       mainView.style.display = 'flex';
 
-      await loadThreads();
-      startAutoRefresh();
+      if (isDmChannel(detected.channelId)) {
+        showDmNotice();
+      } else {
+        updateChannelDisplay();
+        await loadThreads();
+        startAutoRefresh();
+      }
     } else {
       // No Slack tab found - show main view with manual select
       setupView.style.display = 'none';

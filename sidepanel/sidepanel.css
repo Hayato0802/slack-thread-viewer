@@ -1,9 +1,63 @@
+/* ===== Theme Variables ===== */
+body, body.theme-dark {
+  --bg-primary: #1a1d21;
+  --bg-secondary: #222529;
+  --bg-hover: #222529;
+  --border: #2c2d30;
+  --text-primary: #fff;
+  --text-secondary: #d1d2d3;
+  --text-muted: #9ea0a3;
+  --text-faint: #616366;
+  --input-border: #393b3f;
+  --scrollbar: #393b3f;
+  --scrollbar-hover: #4a4c50;
+  --accent-blue: #1d9bd1;
+  --accent-green: #007a5a;
+  --accent-green-hover: #148567;
+  --slack-purple: #4A154B;
+  --slack-purple-hover: #611f64;
+  --btn-secondary-bg: #393b3f;
+  --btn-secondary-hover: #4a4c50;
+  --error-color: #e01e5a;
+  --avatar-bg: #393b3f;
+  --spinner-track: #393b3f;
+  --spinner-color: #1264a3;
+  --checkbox-accent: #007a5a;
+}
+
+body.theme-light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f8f8;
+  --bg-hover: #f0f0f0;
+  --border: #e0e0e0;
+  --text-primary: #1d1c1d;
+  --text-secondary: #616061;
+  --text-muted: #868686;
+  --text-faint: #b0b0b0;
+  --input-border: #d0d0d0;
+  --scrollbar: #c0c0c0;
+  --scrollbar-hover: #a0a0a0;
+  --accent-blue: #1264a3;
+  --accent-green: #007a5a;
+  --accent-green-hover: #148567;
+  --slack-purple: #4A154B;
+  --slack-purple-hover: #611f64;
+  --btn-secondary-bg: #e8e8e8;
+  --btn-secondary-hover: #d8d8d8;
+  --error-color: #e01e5a;
+  --avatar-bg: #e0e0e0;
+  --spinner-track: #e0e0e0;
+  --spinner-color: #1264a3;
+  --checkbox-accent: #007a5a;
+}
+
+/* ===== Base ===== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #1a1d21;
-  color: #d1d2d3;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
   font-size: 13px;
   height: 100vh;
   overflow: hidden;
@@ -26,11 +80,11 @@ body {
   text-align: center;
 }
 .setup-icon { font-size: 48px; margin-bottom: 16px; }
-.setup-message h2 { font-size: 18px; color: #fff; margin-bottom: 8px; }
-.setup-message p { color: #9ea0a3; margin-bottom: 20px; }
+.setup-message h2 { font-size: 18px; color: var(--text-primary); margin-bottom: 8px; }
+.setup-message p { color: var(--text-muted); margin-bottom: 20px; }
 
 .btn-slack-login {
-  background: #4A154B;
+  background: var(--slack-purple);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -41,30 +95,30 @@ body {
   width: 200px;
   margin-bottom: 12px;
 }
-.btn-slack-login:hover { background: #611f64; }
+.btn-slack-login:hover { background: var(--slack-purple-hover); }
 .btn-slack-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-link {
   background: none;
   border: none;
-  color: #616366;
+  color: var(--text-faint);
   font-size: 12px;
   cursor: pointer;
   text-decoration: underline;
   margin-top: 8px;
 }
-.btn-link:hover { color: #9ea0a3; }
+.btn-link:hover { color: var(--text-muted); }
 
 .setup-status {
   font-size: 12px;
-  color: #e01e5a;
+  color: var(--error-color);
   min-height: 16px;
   margin-bottom: 4px;
 }
 
 /* Buttons */
 .btn-primary {
-  background: #007a5a;
+  background: var(--accent-green);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -73,11 +127,11 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
-.btn-primary:hover { background: #148567; }
+.btn-primary:hover { background: var(--accent-green-hover); }
 
 .btn-secondary {
-  background: #393b3f;
-  color: #d1d2d3;
+  background: var(--btn-secondary-bg);
+  color: var(--text-secondary);
   border: none;
   border-radius: 6px;
   padding: 8px 16px;
@@ -85,10 +139,10 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
-.btn-secondary:hover { background: #4a4c50; }
+.btn-secondary:hover { background: var(--btn-secondary-hover); }
 
 .btn-slack {
-  background: #4A154B;
+  background: var(--slack-purple);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -98,12 +152,12 @@ body {
   cursor: pointer;
   white-space: nowrap;
 }
-.btn-slack:hover { background: #611f64; }
+.btn-slack:hover { background: var(--slack-purple-hover); }
 
 .icon-btn {
   background: none;
   border: none;
-  color: #9ea0a3;
+  color: var(--text-muted);
   font-size: 18px;
   cursor: pointer;
   padding: 4px 8px;
@@ -112,12 +166,12 @@ body {
   display: inline-flex;
   align-items: center;
 }
-.icon-btn:hover { background: #2c2d30; color: #fff; }
+.icon-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
 
 /* Header */
 .header {
   padding: 12px 16px;
-  border-bottom: 1px solid #2c2d30;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 .header-top {
@@ -129,7 +183,12 @@ body {
 .header-title {
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 /* Current Channel */
@@ -138,16 +197,16 @@ body {
   align-items: center;
   gap: 6px;
   padding: 8px 10px;
-  background: #222529;
+  background: var(--bg-secondary);
   border-radius: 6px;
   margin-bottom: 8px;
 }
 .channel-icon {
-  color: #9ea0a3;
+  color: var(--text-muted);
   font-weight: 700;
 }
 .channel-name {
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 14px;
   flex: 1;
@@ -160,15 +219,15 @@ body {
 .search-bar input {
   width: 100%;
   padding: 7px 10px;
-  background: #222529;
-  border: 1px solid #393b3f;
+  background: var(--bg-secondary);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 13px;
   outline: none;
 }
-.search-bar input:focus { border-color: #1264a3; }
-.search-bar input::placeholder { color: #616366; }
+.search-bar input:focus { border-color: var(--accent-blue); }
+.search-bar input::placeholder { color: var(--text-faint); }
 
 /* Channel Fallback */
 .channel-fallback {
@@ -176,31 +235,31 @@ body {
 }
 .channel-fallback summary {
   font-size: 12px;
-  color: #616366;
+  color: var(--text-faint);
   cursor: pointer;
   padding: 4px 0;
 }
-.channel-fallback summary:hover { color: #9ea0a3; }
+.channel-fallback summary:hover { color: var(--text-muted); }
 .channel-fallback select {
   width: 100%;
   margin-top: 6px;
-  background: #222529;
-  color: #d1d2d3;
-  border: 1px solid #393b3f;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   padding: 7px 10px;
   font-size: 13px;
   outline: none;
   cursor: pointer;
 }
-.channel-fallback select:focus { border-color: #1264a3; }
+.channel-fallback select:focus { border-color: var(--accent-blue); }
 
 .auto-refresh {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 12px;
-  color: #9ea0a3;
+  color: var(--text-muted);
 }
 .auto-refresh label {
   display: flex;
@@ -209,7 +268,7 @@ body {
   cursor: pointer;
 }
 .auto-refresh input[type="checkbox"] {
-  accent-color: #007a5a;
+  accent-color: var(--checkbox-accent);
 }
 .last-updated { font-size: 11px; }
 
@@ -220,13 +279,13 @@ body {
   justify-content: center;
   gap: 10px;
   padding: 40px;
-  color: #9ea0a3;
+  color: var(--text-muted);
 }
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid #393b3f;
-  border-top-color: #1264a3;
+  border: 2px solid var(--spinner-track);
+  border-top-color: var(--spinner-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -240,15 +299,15 @@ body {
 }
 .thread-list::-webkit-scrollbar { width: 6px; }
 .thread-list::-webkit-scrollbar-track { background: transparent; }
-.thread-list::-webkit-scrollbar-thumb { background: #393b3f; border-radius: 3px; }
-.thread-list::-webkit-scrollbar-thumb:hover { background: #4a4c50; }
+.thread-list::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+.thread-list::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
 
 /* Time Group */
 .time-group-label {
   padding: 8px 16px 4px;
   font-size: 11px;
   font-weight: 700;
-  color: #616366;
+  color: var(--text-faint);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -256,11 +315,11 @@ body {
 /* Thread Card */
 .thread-card {
   padding: 10px 16px;
-  border-bottom: 1px solid #2c2d30;
+  border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background 0.15s;
 }
-.thread-card:hover { background: #222529; }
+.thread-card:hover { background: var(--bg-hover); }
 
 .thread-card-header {
   display: flex;
@@ -272,23 +331,23 @@ body {
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  background: #393b3f;
+  background: var(--avatar-bg);
   flex-shrink: 0;
 }
 .thread-author {
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 13px;
 }
 .thread-time {
   margin-left: auto;
   font-size: 11px;
-  color: #616366;
+  color: var(--text-faint);
   flex-shrink: 0;
 }
 
 .thread-preview {
-  color: #ababad;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1.4;
   overflow: hidden;
@@ -309,16 +368,16 @@ body {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #1d9bd1;
+  color: var(--accent-blue);
   font-weight: 600;
 }
 .last-reply-time {
   font-size: 11px;
-  color: #616366;
+  color: var(--text-faint);
 }
 .btn-slack-small {
   margin-left: auto;
-  background: #4A154B;
+  background: var(--slack-purple);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -331,7 +390,7 @@ body {
   white-space: nowrap;
 }
 .thread-card:hover .btn-slack-small { opacity: 1; }
-.btn-slack-small:hover { background: #611f64; }
+.btn-slack-small:hover { background: var(--slack-purple-hover); }
 
 /* Load More */
 .load-more-wrap {
@@ -346,7 +405,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 200px;
-  color: #616366;
+  color: var(--text-faint);
 }
 
 /* Thread Detail */
@@ -356,7 +415,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #1a1d21;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
   z-index: 10;
@@ -366,13 +425,13 @@ body {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  border-bottom: 1px solid #2c2d30;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 .detail-header h2 {
   font-size: 15px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   flex: 1;
 }
 
@@ -383,19 +442,19 @@ body {
 }
 .thread-messages::-webkit-scrollbar { width: 6px; }
 .thread-messages::-webkit-scrollbar-track { background: transparent; }
-.thread-messages::-webkit-scrollbar-thumb { background: #393b3f; border-radius: 3px; }
+.thread-messages::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
 
 .message {
   padding: 8px 16px;
   display: flex;
   gap: 10px;
 }
-.message:hover { background: #222529; }
+.message:hover { background: var(--bg-hover); }
 .message-avatar {
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  background: #393b3f;
+  background: var(--avatar-bg);
   flex-shrink: 0;
 }
 .message-body { flex: 1; min-width: 0; }
@@ -407,25 +466,25 @@ body {
 }
 .message-author {
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 13px;
 }
 .message-time {
   font-size: 11px;
-  color: #616366;
+  color: var(--text-faint);
 }
 .message-text {
-  color: #d1d2d3;
+  color: var(--text-secondary);
   line-height: 1.5;
   word-break: break-word;
 }
 .message-text a {
-  color: #1d9bd1;
+  color: var(--accent-blue);
   text-decoration: none;
 }
 .message-text a:hover { text-decoration: underline; }
 .message.parent-message {
   padding-bottom: 12px;
-  border-bottom: 1px solid #2c2d30;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
 }

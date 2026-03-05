@@ -212,6 +212,13 @@ oauthBtn.addEventListener('click', startOAuth);
 
 // ===== Init =====
 async function init() {
+  // Check if config.js is loaded
+  if (typeof SLACK_CLIENT_ID === 'undefined') {
+    oauthBtn.disabled = true;
+    showStatus(statusEl, 'config.js が見つかりません。config.js.example をコピーして config.js を作成し、Client ID/Secret を設定してください。', 'error');
+    return;
+  }
+
   const result = await chrome.storage.local.get(['slackToken']);
   const token = result.slackToken || '';
 
