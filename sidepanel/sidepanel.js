@@ -149,6 +149,8 @@ function updateChannelDisplay() {
 }
 
 // ===== Thread Loading =====
+const RECENT_REPLY_DAYS = 7; // Auto-fetch until all threads with replies within this period are covered
+
 async function loadThreads(append = false) {
   if (!selectedChannelId) return;
 
@@ -160,27 +162,21 @@ async function loadThreads(append = false) {
   }
 
   try {
-    const params = { channel: selectedChannelId, limit: 100 };
-    if (append && nextCursor) {
-      params.cursor = nextCursor;
-    }
-
-    const data = await slackApi('conversations.history', params);
-    const messages = data.messages || [];
-    nextCursor = data.response_metadata?.next_cursor || '';
-
-    // Parent messages only, with sort key
-    const newThreads = messages
-      .filter(m => !m.thread_ts || m.thread_ts === m.ts)
-      .map(m => ({
-        ...m,
-        sortKey: parseFloat(m.latest_reply || m.ts),
-      }));
-
     if (append) {
-      allThreads.push(...newThreads);
+      // Manual "load more": single page fetch
+      await fetchPage();
     } else {
-      allThreads = newThreads;
+      // Initial load: auto-paginate to cover recent replies
+      const cutoff = Date.now() / 1000 - RECENT_REPLY_DAYS * 86400;
+      let hasMore = true;
+
+      while (hasMore) {
+        const oldestTs = await fetchPage();
+        hasMore = !!nextCursor;
+
+        // Stop if we've gone far enough back that no recent replies would be missed
+        if (!hasMore || oldestTs < cutoff) break;
+      }
     }
 
     // Sort all by latest reply
@@ -189,7 +185,6 @@ async function loadThreads(append = false) {
     // Change detection: skip re-render if data unchanged
     const newHash = allThreads.map(t => `${t.ts}:${t.latest_reply || ''}:${t.reply_count || 0}`).join('|');
     if (!append && newHash === lastThreadsHash) {
-      // Data unchanged, just update timestamp
       updateLastUpdated();
       loading.style.display = 'none';
       return;
@@ -210,6 +205,28 @@ async function loadThreads(append = false) {
   } finally {
     loading.style.display = 'none';
   }
+}
+
+// Fetch a single page from conversations.history; returns oldest message ts
+async function fetchPage() {
+  const params = { channel: selectedChannelId, limit: 100 };
+  if (nextCursor) params.cursor = nextCursor;
+
+  const data = await slackApi('conversations.history', params);
+  const messages = data.messages || [];
+  nextCursor = data.response_metadata?.next_cursor || '';
+
+  const newThreads = messages
+    .filter(m => !m.thread_ts || m.thread_ts === m.ts)
+    .map(m => ({
+      ...m,
+      sortKey: parseFloat(m.latest_reply || m.ts),
+    }));
+
+  allThreads.push(...newThreads);
+
+  // Return the oldest message timestamp in this page
+  return messages.length > 0 ? parseFloat(messages[messages.length - 1].ts) : 0;
 }
 
 // ===== Search Filter =====

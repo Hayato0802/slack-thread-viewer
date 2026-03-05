@@ -1,6 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Slack Thread Viewer",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkRTXs4fIuLY+AVOQw0VyQl5Xl6RjjAcqqbwiq9ePKKQTu5b9hzoxVRuZpq+TVG8IIMgocoPaSIY20D28ulqaT7nQs3JTenus4VVK2GPcnOzpXGVe6siofGpdL+C+GSPeUmEciAvfroVG732l7GwAXUn9qEJbN9rV31TROW6s+8i7f+hBXTXCHO3NLeLcjNFzQNT/Iivu8Wn9G8JW6kT9+PxWq6R/SaVV0TtdtIM5eGU5KpQrCOCxSjIUe9DNPR+WuDyyEiCGTewgryRFdsn0+qIA8H/D8aJgPN/pYIge4dtNqwYWSayyK4fRfG9x/PH7aEkQrllyaAREys+jSTH6SQIDAQAB",
   "version": "1.0.0",
   "description": "スレッドを最新返信順に表示するSlack用サイドパネル拡張",
   "permissions": [
