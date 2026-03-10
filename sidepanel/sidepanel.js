@@ -373,6 +373,53 @@ function closeThread() {
   currentThread = null;
 }
 
+// ===== Emoji =====
+const EMOJI_MAP = {
+  '+1': '\u{1F44D}', '-1': '\u{1F44E}', '100': '\u{1F4AF}',
+  'tada': '\u{1F389}', 'fire': '\u{1F525}', 'bomb': '\u{1F4A3}',
+  'rocket': '\u{1F680}', 'star': '\u2B50', 'star2': '\u{1F31F}',
+  'sparkles': '\u2728', 'zap': '\u26A1', 'bulb': '\u{1F4A1}',
+  'eyes': '\u{1F440}', 'thinking_face': '\u{1F914}', 'pray': '\u{1F64F}',
+  'clap': '\u{1F44F}', 'wave': '\u{1F44B}', 'raised_hands': '\u{1F64C}',
+  'point_up': '\u261D\uFE0F', 'point_down': '\u{1F447}',
+  'point_left': '\u{1F448}', 'point_right': '\u{1F449}',
+  'ok_hand': '\u{1F44C}', 'muscle': '\u{1F4AA}',
+  'heart': '\u2764\uFE0F', 'broken_heart': '\u{1F494}',
+  'heavy_check_mark': '\u2714\uFE0F', 'white_check_mark': '\u2705',
+  'x': '\u274C', 'warning': '\u26A0\uFE0F', 'no_entry': '\u26D4',
+  'question': '\u2753', 'exclamation': '\u2757',
+  'rotating_light': '\u{1F6A8}', 'mega': '\u{1F4E3}', 'loudspeaker': '\u{1F4E2}',
+  'bell': '\u{1F514}', 'pin': '\u{1F4CC}', 'pushpin': '\u{1F4CC}',
+  'memo': '\u{1F4DD}', 'pencil': '\u270F\uFE0F', 'pencil2': '\u270F\uFE0F',
+  'clipboard': '\u{1F4CB}', 'page_facing_up': '\u{1F4C4}',
+  'calendar': '\u{1F4C5}', 'clock': '\u{1F570}\uFE0F',
+  'link': '\u{1F517}', 'gear': '\u2699\uFE0F',
+  'bug': '\u{1F41B}', 'wrench': '\u{1F527}', 'hammer': '\u{1F528}',
+  'lock': '\u{1F512}', 'key': '\u{1F511}',
+  'smile': '\u{1F604}', 'laughing': '\u{1F606}', 'sweat_smile': '\u{1F605}',
+  'joy': '\u{1F602}', 'rofl': '\u{1F923}',
+  'slightly_smiling_face': '\u{1F642}', 'upside_down_face': '\u{1F643}',
+  'wink': '\u{1F609}', 'blush': '\u{1F60A}', 'innocent': '\u{1F607}',
+  'sob': '\u{1F62D}', 'cry': '\u{1F622}', 'angry': '\u{1F620}',
+  'rage': '\u{1F621}', 'scream': '\u{1F631}',
+  'sunglasses': '\u{1F60E}', 'nerd_face': '\u{1F913}',
+  'thumbsup': '\u{1F44D}', 'thumbsdown': '\u{1F44E}',
+  'party_popper': '\u{1F389}', 'confetti_ball': '\u{1F38A}',
+  'trophy': '\u{1F3C6}', 'medal': '\u{1F3C5}',
+  'arrow_right': '\u27A1\uFE0F', 'arrow_left': '\u2B05\uFE0F',
+  'arrow_up': '\u2B06\uFE0F', 'arrow_down': '\u2B07\uFE0F',
+  'red_circle': '\u{1F534}', 'large_blue_circle': '\u{1F535}',
+  'white_circle': '\u26AA', 'black_circle': '\u26AB',
+  'large_green_circle': '\u{1F7E2}', 'large_yellow_circle': '\u{1F7E1}',
+  'speech_balloon': '\u{1F4AC}', 'thought_balloon': '\u{1F4AD}',
+  'information_source': '\u2139\uFE0F',
+  'wave': '\u{1F44B}', 'handshake': '\u{1F91D}',
+};
+
+function convertEmoji(text) {
+  return text.replace(/:([a-z0-9_+-]+):/g, (match, name) => EMOJI_MAP[name] || match);
+}
+
 // ===== Utilities =====
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -381,7 +428,7 @@ function escapeHtml(str) {
 }
 
 function stripMrkdwn(text) {
-  return text
+  return convertEmoji(text)
     .replace(/<@[A-Z0-9]+>/g, '@user')
     .replace(/<#[A-Z0-9]+\|([^>]+)>/g, '#$1')
     .replace(/<(https?:\/\/[^|>]+)\|([^>]+)>/g, '$2')
@@ -390,7 +437,7 @@ function stripMrkdwn(text) {
 }
 
 function formatMessageText(text) {
-  let escaped = escapeHtml(text);
+  let escaped = escapeHtml(convertEmoji(text));
   escaped = escaped.replace(
     /&lt;(https?:\/\/[^|&]+)\|([^&]+)&gt;/g,
     '<a href="$1" target="_blank">$2</a>'
