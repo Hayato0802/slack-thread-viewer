@@ -363,6 +363,8 @@ async function openThreadDetail(thread) {
       `;
       threadMessages.appendChild(el);
     });
+    // Scroll to bottom to show latest reply
+    threadMessages.scrollTop = threadMessages.scrollHeight;
   } catch (e) {
     threadMessages.innerHTML = `<div class="empty-state"><p>エラー: ${e.message}</p></div>`;
   }
@@ -720,6 +722,19 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.slackToken) {
     token = changes.slackToken.newValue || '';
     if (token) init();
+  }
+});
+
+// Notify background that side panel is open/closed
+chrome.runtime.sendMessage({ type: 'SIDE_PANEL_OPENED' }).catch(() => {});
+window.addEventListener('beforeunload', () => {
+  chrome.runtime.sendMessage({ type: 'SIDE_PANEL_CLOSED' }).catch(() => {});
+});
+
+// Listen for close request from background
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === 'CLOSE_SIDE_PANEL') {
+    window.close();
   }
 });
 

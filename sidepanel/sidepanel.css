@@ -58,7 +58,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   height: 100vh;
   overflow: hidden;
 }

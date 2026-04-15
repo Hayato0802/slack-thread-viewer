@@ -4,6 +4,8 @@ chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 // デフォルトではサイドパネルを無効化（Slackタブでのみ有効）
 chrome.sidePanel.setOptions({ enabled: false });
 
+let sidePanelOpen = false;
+
 function isSlackUrl(url) {
   return url?.includes('app.slack.com/');
 }
@@ -64,6 +66,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
     });
     return true; // async response
+  }
+
+  if (msg.type === 'OPEN_SIDE_PANEL') {
+    if (sidePanelOpen) {
+      // Close by telling the side panel to close itself
+      chrome.runtime.sendMessage({ type: 'CLOSE_SIDE_PANEL' }).catch(() => {});
+    } else {
+      chrome.sidePanel.open({ tabId: sender.tab.id });
+    }
+    sendResponse({ ok: true });
+  }
+
+  if (msg.type === 'SIDE_PANEL_OPENED') {
+    sidePanelOpen = true;
+    sendResponse({ ok: true });
+  }
+
+  if (msg.type === 'SIDE_PANEL_CLOSED') {
+    sidePanelOpen = false;
+    sendResponse({ ok: true });
   }
 
   if (msg.type === 'OPEN_THREAD_IN_SLACK') {
